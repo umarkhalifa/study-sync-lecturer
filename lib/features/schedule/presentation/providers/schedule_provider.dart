@@ -18,7 +18,7 @@ class ScheduleProvider extends ChangeNotifier {
 
   List<Lecture> _timeTable = []; // Stores the retrieved lecture timetable
   List<Lecture> _lectures = []; // Stores lectures for the selected day
-  List<Lecture> _classes = []; // Stores class lectures
+  final List<Lecture> _classes = []; // Stores class lectures
   DateTime _selectedDay = DateTime.now(); // Stores the selected day
   UserProfile? _profile; // Stores the user profile information
   AppState _appState = AppState.idle; // Represents the current app state
