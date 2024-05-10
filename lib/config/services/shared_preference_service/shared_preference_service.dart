@@ -16,7 +16,7 @@ class SharedPreferenceProvider {
     sharedPreferences?.setBool('onBoarding', true);
   }
 
-  void setCompleteProfile({bool? logOut}){
-    sharedPreferences?.setBool('completeProfile', logOut??true);
+  void setCompleteProfile({bool? value}){
+    sharedPreferences?.setBool('completeProfile', value??true);
   }
 }

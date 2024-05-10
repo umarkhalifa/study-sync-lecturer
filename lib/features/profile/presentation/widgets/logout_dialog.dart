@@ -1,3 +1,4 @@
+import 'package:alhikmah_schedule_lecturer/config/services/push_notification_service/local_push_notifications.dart';
 import 'package:alhikmah_schedule_lecturer/config/services/shared_preference_service/shared_preference_service.dart';
 import 'package:alhikmah_schedule_lecturer/locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -49,7 +50,8 @@ class LogoutDialog extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       FirebaseAuth.instance.signOut();
-                      locator<SharedPreferenceProvider>().setCompleteProfile(logOut: false);
+                      locator<SharedPreferenceProvider>().setCompleteProfile(value: false);
+                      locator<LocalNotificationService>().clearClasses();
                       Navigator.pushNamedAndRemoveUntil(
                           context, '/login', (route) => false);
                     },

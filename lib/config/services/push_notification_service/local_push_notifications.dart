@@ -89,4 +89,8 @@ class LocalNotificationService {
 
     return scheduledDate;
   }
+
+  Future<void> clearClasses()async{
+   await flutterLocalNotificationsPlugin.cancelAll();
+  }
 }

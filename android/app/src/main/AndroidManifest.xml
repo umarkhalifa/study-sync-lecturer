@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
     <application
-        android:label="alhikmah_schedule_lecturer"
+        android:label="StudySync-Lecturer"
         android:name="${applicationName}"
         android:icon="@mipmap/student_launcher">
         <activity
