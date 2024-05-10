@@ -20,7 +20,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     emailController.dispose();
     passwordController.dispose();
@@ -46,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     "Welcome",
                     style: TextStyle(
                         fontSize: 34,
-                        color: Color(0xff036000),
+                        color: Color(0xff46a055),
                         fontWeight: FontWeight.w700),
                   ),
                   const Text(
@@ -129,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: const Text(
                           " Register",
                           style: TextStyle(
-                            color: Color(0xff036000),
+                            color: Color(0xff46a055),
                           ),
                         ),
                       ),

@@ -1,5 +1,5 @@
-import 'package:alhikmah_schedule_student/features/authentication/domain/model/model.dart';
-import 'package:alhikmah_schedule_student/utils/extensions/time.dart';
+import 'package:alhikmah_schedule_lecturer/features/authentication/domain/model/model.dart';
+import 'package:alhikmah_schedule_lecturer/utils/extensions/time.dart';
 import 'package:flutter/material.dart';
 import 'package:solar_icons/solar_icons.dart';
 
@@ -19,10 +19,14 @@ class ScheduleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final occurrence =
+        lectureOccurrence?.occurrences.where((element) => element.day == selectedDay.weekday).first;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('${hour.toTime()} '),
+        SizedBox(
+            width: 70,
+            child: Text('${hour.toTime()} ')),
         const SizedBox(
           width: 30,
           child: Divider(),
@@ -44,7 +48,8 @@ class ScheduleCard extends StatelessWidget {
                                 lecture: lectureOccurrence!,
                                 day: selectedDay.weekday,
                               ),
-                          backgroundColor: Colors.black54,
+                          backgroundColor: Colors.black,
+                          barrierColor: Colors.black87,
                           isScrollControlled: true,
                           isDismissible: true);
                     },
@@ -77,6 +82,9 @@ class ScheduleCard extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    Text(
+                                      lectureOccurrence?.id??""
+                                    ),
                                     const SizedBox(
                                       height: 5,
                                     ),
@@ -93,20 +101,20 @@ class ScheduleCard extends StatelessWidget {
                                     Row(
                                       children: [
                                         const Icon(
-                                          SolarIconsOutline.user,
+                                          SolarIconsOutline.mapPoint,
                                           size: 17,
                                           color: Color(0xff224529),
                                         ),
                                         const SizedBox(
                                           width: 5,
                                         ),
-                                        Text(lectureOccurrence!.lecturer!.isEmpty
-                                            ? 'Not Available'
-                                            : '${lectureOccurrence?.lecturer}',
+                                        Text(occurrence?.venue??'',
                                         style: const TextStyle(
                                           color: Color(0xff224529)
                                         ),
                                         ),
+                                        const Spacer(),
+                                        const Icon(SolarIconsOutline.altArrowDown)
                                       ],
                                     )
                                   ],

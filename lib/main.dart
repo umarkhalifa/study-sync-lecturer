@@ -1,6 +1,4 @@
-import 'package:alhikmah_schedule_lecturer/config/services/push_notification_service/push_notification_service.dart';
 import 'package:alhikmah_schedule_lecturer/features/authentication/presentation/providers/auth_provider.dart';
-import 'package:alhikmah_schedule_lecturer/features/authentication/presentation/providers/courses_provider.dart';
 import 'package:alhikmah_schedule_lecturer/features/authentication/presentation/screens/login.dart';
 import 'package:alhikmah_schedule_lecturer/features/authentication/presentation/screens/personal_details.dart';
 import 'package:alhikmah_schedule_lecturer/features/authentication/presentation/screens/register_screen.dart';
@@ -9,12 +7,34 @@ import 'package:alhikmah_schedule_lecturer/features/authentication/presentation/
 import 'package:alhikmah_schedule_lecturer/features/schedule/presentation/screens/schedule_screen.dart';
 import 'package:alhikmah_schedule_lecturer/firebase_options.dart';
 import 'package:alhikmah_schedule_lecturer/locator.dart';
-import 'package:alhikmah_schedule_lecturer/utils/notification_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
+import 'config/services/push_notification_service/local_push_notifications.dart';
+import 'features/profile/presentation/screens/profile_screen.dart';
+import 'features/schedule/presentation/providers/schedule_provider.dart';
 final navigatorKey = GlobalKey<NavigatorState>();
+
+late AndroidNotificationChannel channel;
+late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+Future<void> setupFlutterNotifications() async {
+  channel = const AndroidNotificationChannel(
+    'high_importance_channel', // id
+    'High Importance Notifications', // title
+    description:
+    'This channel is used for important notifications.', // description
+    importance: Importance.max,
+  );
+  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+      AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
+}
 
 void main()async {
   setupLocator();
@@ -22,7 +42,8 @@ void main()async {
   await Firebase.initializeApp(
     options:DefaultFirebaseOptions.currentPlatform,
   );
-  await PushNotificationService().initNotifications();
+
+  await setupFlutterNotifications();
   await LocalNotificationService().init();
 
   runApp(const MyApp());
@@ -35,11 +56,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context)=> SelectCoursesProvider()),
-        ChangeNotifierProvider(create: (context)=> AuthProvider())
+        ChangeNotifierProvider(create: (context)=> AuthProvider()),
+        ChangeNotifierProvider(create: (context) => ScheduleProvider()),
+
       ],
       child: MaterialApp(
-        title: 'Alhikmah Schedule Student',
+        title: 'Alhikmah Schedule Lecturer',
         debugShowCheckedModeBanner: false,
         navigatorKey: navigatorKey,
         theme: ThemeData(
@@ -56,7 +78,9 @@ class MyApp extends StatelessWidget {
           '/login': (context) => const LoginScreen(),
           '/register':(context)=> const RegisterScreen(),
           '/personalInformation':(context)=> const PersonalDetailsScreen(),
-          '/home':(context)=> const ScheduleScreen()
+          '/home':(context)=> const ScheduleScreen(),
+          '/profile':(context)=> const ProfileScreen()
+
         },
       ),
     );

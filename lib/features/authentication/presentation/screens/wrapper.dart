@@ -17,7 +17,6 @@ class AppWrapper extends StatefulWidget {
 class _AppWrapperState extends State<AppWrapper> {
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
     return StreamBuilder(
       stream: FirebaseAuth.instance.userChanges(),
       builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
@@ -25,21 +24,14 @@ class _AppWrapperState extends State<AppWrapper> {
         if (locator<SharedPreferenceProvider>().viewedOnBoarding == false) {
           return const OnBoardingScreen();
         } else {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text("Loading");
-          }
-          else {
-            if (snapshot.hasData ) {
-              /// Check if user has uploaded profile details
-              if (locator<SharedPreferenceProvider>().completedProfile ==
-                  false) {
-                return const PersonalDetailsScreen();
-              }
-              return const ScheduleScreen();
+          if (snapshot.hasData) {
+            /// Check if user has uploaded profile details
+            if (locator<SharedPreferenceProvider>().completedProfile == false) {
+              return const PersonalDetailsScreen();
             }
-            else {
-              return const AuthForm();
-            }
+            return const ScheduleScreen();
+          } else {
+            return const AuthForm();
           }
         }
       },

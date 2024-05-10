@@ -1,6 +1,6 @@
-import 'package:alhikmah_schedule_student/features/profile/presentation/widgets/detail_column.dart';
-import 'package:alhikmah_schedule_student/features/profile/presentation/widgets/logout_dialog.dart';
-import 'package:alhikmah_schedule_student/features/schedule/presentation/providers/schedule_provider.dart';
+import 'package:alhikmah_schedule_lecturer/features/profile/presentation/widgets/detail_column.dart';
+import 'package:alhikmah_schedule_lecturer/features/profile/presentation/widgets/logout_dialog.dart';
+import 'package:alhikmah_schedule_lecturer/features/schedule/presentation/providers/schedule_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -44,9 +44,6 @@ class ProfileScreen extends StatelessWidget {
             DetailColumn(
                 label: 'Full Name',
                 content: FirebaseAuth.instance.currentUser?.displayName ?? ""),
-            DetailColumn(
-                label: 'Level',
-                content: '${courseProv.userProfile?.level ?? ""}'),
             DetailColumn(
                 label: 'Programme',
                 content: courseProv.userProfile?.programme ?? ''),

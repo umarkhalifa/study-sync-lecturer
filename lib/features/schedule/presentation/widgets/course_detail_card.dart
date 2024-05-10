@@ -1,4 +1,4 @@
-import 'package:alhikmah_schedule_student/features/schedule/presentation/providers/schedule_provider.dart';
+import 'package:alhikmah_schedule_lecturer/features/schedule/presentation/providers/schedule_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
