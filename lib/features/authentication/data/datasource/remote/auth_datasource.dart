@@ -18,8 +18,10 @@ class AuthenticationDataSource {
     try {
       final user = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-      final users = await firebaseFirestore.collection("LECTURERS").doc(
-          user.user?.uid).get();
+      final users = await firebaseFirestore
+          .collection("LECTURERS")
+          .doc(user.user?.uid)
+          .get();
       if (users.exists) {
         // Update the user's token.
         await firebaseFirestore
@@ -92,12 +94,21 @@ class AuthenticationDataSource {
     }
   }
 
-
   /// Fetch List of Programmes in department with respective courses
   Future<Either<String, List<Department>>> fetchProgrammes() async {
     try {
       final data = await firebaseFirestore.collection("PROGRAMMES").get();
       return Right(data.docs.map((e) => Department.fromMap(e.data())).toList());
+    } catch (error) {
+      log(error.toString());
+      return const Left('Error fetching courses');
+    }
+  }
+
+  Future<Either<String, List<String>>> fetchCourses() async {
+    try {
+      final data = await firebaseFirestore.collection("CLASSES").get();
+      return Right(data.docs.map((e) => e.id).toList());
     }
     catch (error) {
       log(error.toString());
@@ -105,5 +116,21 @@ class AuthenticationDataSource {
     }
   }
 
-
+  Future<Either<String, String>> updateProfile(
+      {String? programme, String? staffId,List<String>? courses}) async {
+    try {
+      final body = {'Programme': programme, 'StaffId': staffId,
+        "Courses":courses
+      };
+      body.removeWhere((key, value) => value == null);
+      await firebaseFirestore
+          .collection("LECTURERS")
+          .doc(_firebaseAuth.currentUser?.uid)
+          .update(body);
+      return const Right('Profile updated successfully');
+    } catch (error) {
+      log(error.toString());
+      return const Left('Error updating Profile');
+    }
+  }
 }

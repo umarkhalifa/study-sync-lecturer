@@ -2,8 +2,11 @@ import 'package:alhikmah_schedule_lecturer/features/authentication/presentation/
 import 'package:alhikmah_schedule_lecturer/features/authentication/presentation/screens/login.dart';
 import 'package:alhikmah_schedule_lecturer/features/authentication/presentation/screens/personal_details.dart';
 import 'package:alhikmah_schedule_lecturer/features/authentication/presentation/screens/register_screen.dart';
+import 'package:alhikmah_schedule_lecturer/features/authentication/presentation/screens/reset_password.dart';
 import 'package:alhikmah_schedule_lecturer/features/authentication/presentation/screens/splash_screen.dart';
 import 'package:alhikmah_schedule_lecturer/features/authentication/presentation/screens/wrapper.dart';
+import 'package:alhikmah_schedule_lecturer/features/profile/presentation/providers/profile_provider.dart';
+import 'package:alhikmah_schedule_lecturer/features/profile/presentation/screens/profile_courses.dart';
 import 'package:alhikmah_schedule_lecturer/features/schedule/presentation/screens/schedule_screen.dart';
 import 'package:alhikmah_schedule_lecturer/firebase_options.dart';
 import 'package:alhikmah_schedule_lecturer/locator.dart';
@@ -58,6 +61,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context)=> AuthProvider()),
         ChangeNotifierProvider(create: (context) => ScheduleProvider()),
+        ChangeNotifierProvider(create: (context) => ProfileProvider()),
 
       ],
       child: MaterialApp(
@@ -79,7 +83,9 @@ class MyApp extends StatelessWidget {
           '/register':(context)=> const RegisterScreen(),
           '/personalInformation':(context)=> const PersonalDetailsScreen(),
           '/home':(context)=> const ScheduleScreen(),
-          '/profile':(context)=> const ProfileScreen()
+          '/profile':(context)=> const ProfileScreen(),
+          '/profileCourse':(context)=> const ProfileCourseScreen(),
+          '/forgotPassword':(context)=> const ResetPassword(),
 
         },
       ),

@@ -19,14 +19,13 @@ class ScheduleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final occurrence =
-        lectureOccurrence?.occurrences.where((element) => element.day == selectedDay.weekday).first;
+    final occurrence = lectureOccurrence?.occurrences
+        .where((element) => element.day == selectedDay.weekday)
+        .first;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(
-            width: 70,
-            child: Text('${hour.toTime()} ')),
+        SizedBox(width: 70, child: Text('${hour.toTime()} ')),
         const SizedBox(
           width: 30,
           child: Divider(),
@@ -65,25 +64,34 @@ class ScheduleCard extends StatelessWidget {
                             const Material(
                               color: Color(0xff358442),
                               borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(5),
-                                bottomLeft: Radius.circular(5)
-                              ),
+                                  topLeft: Radius.circular(5),
+                                  bottomLeft: Radius.circular(5)),
                               child: SizedBox(
                                 width: 5,
                                 height: 100,
                               ),
-
                             ),
-                            const SizedBox(width: 5,),
+                            const SizedBox(
+                              width: 5,
+                            ),
                             Flexible(
                               child: Padding(
                                 padding: const EdgeInsets.all(10),
-
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      lectureOccurrence?.id??""
+                                    Row(
+                                      children: [
+                                        Text(lectureOccurrence?.id ?? ""),
+                                        const Spacer(),
+                                        lectureCanceled(occurrence?.day??1)
+                                            ? const Text(
+                                                "CANCELED",
+                                                style: TextStyle(
+                                                    color: Colors.red),
+                                              )
+                                            : const SizedBox(),
+                                      ],
                                     ),
                                     const SizedBox(
                                       height: 5,
@@ -108,13 +116,14 @@ class ScheduleCard extends StatelessWidget {
                                         const SizedBox(
                                           width: 5,
                                         ),
-                                        Text(occurrence?.venue??'',
-                                        style: const TextStyle(
-                                          color: Color(0xff224529)
-                                        ),
+                                        Text(
+                                          occurrence?.venue ?? '',
+                                          style: const TextStyle(
+                                              color: Color(0xff224529)),
                                         ),
                                         const Spacer(),
-                                        const Icon(SolarIconsOutline.altArrowDown)
+                                        const Icon(
+                                            SolarIconsOutline.altArrowDown)
                                       ],
                                     )
                                   ],
@@ -130,5 +139,21 @@ class ScheduleCard extends StatelessWidget {
         )
       ],
     );
+  }
+
+  bool lectureCanceled(int day) {
+    /// Check if the lecture weekday and today's weekday matches
+    if (day == DateTime.now().weekday) {
+      /// Check if the lecture is active and a canceled date has been set
+      if (lectureOccurrence?.active == false &&
+          lectureOccurrence?.canceledDate != null) {
+        final canceledDate = DateTime.parse(lectureOccurrence!.canceledDate!);
+        final twelveHoursAfter = canceledDate.add(const Duration(hours: 12));
+        /// If the time is 12 hours before the lecture canceled date display
+        /// that the lecture has been cancele
+        return DateTime.now().isBefore(twelveHoursAfter);
+      }
+    }
+    return false;
   }
 }

@@ -1,14 +1,14 @@
 class UserProfile{
   final String? programme;
-  final String? matricNo;
+  final String? staffId;
   final List<String>? courses;
 
-  UserProfile({this.programme, this.matricNo, this.courses});
+  UserProfile({this.programme, this.staffId, this.courses});
 
   Map<String, dynamic> toMap() {
     return {
       'programme': programme,
-      'matricNo': matricNo,
+      'matricNo': staffId,
       'courses': courses,
     };
   }
@@ -16,7 +16,7 @@ class UserProfile{
   factory UserProfile.fromMap(Map<String, dynamic> map) {
     return UserProfile(
       programme: map['Programme'] as String,
-      matricNo: map['StaffId'] as String,
+      staffId: map['StaffId'] as String,
       courses: (map['Courses'] as List).map((e) => e.toString()).toList(),
     );
   }

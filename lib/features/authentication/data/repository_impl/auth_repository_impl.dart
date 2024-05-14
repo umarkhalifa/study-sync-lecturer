@@ -16,7 +16,7 @@ class AuthRepositoryImpl implements AuthenticationRepository {
     return data.fold((l) => Left(l), (r) {
       /// User completed Personal Information Stage
       locator<SharedPreferenceProvider>().setCompleteProfile();
-     return Right(r);
+      return Right(r);
     });
   }
 
@@ -55,6 +55,27 @@ class AuthRepositoryImpl implements AuthenticationRepository {
     return data.fold((l) => Left(l), (r) {
       /// User completed Personal Information Stage
       locator<SharedPreferenceProvider>().setCompleteProfile();
+      return Right(r);
+    });
+  }
+
+  @override
+  Future<Either<String, String>> updateProfile(
+      {String? programme,
+      String? staffId,
+      int? level,
+      List<String>? courses}) async {
+    final data = await _authDataSource.updateProfile(
+        programme: programme, staffId: staffId, courses: courses);
+    return data.fold((l) => Left(l), (r) {
+      return Right(r);
+    });
+  }
+
+  @override
+  Future<Either<String, List<String>>> fetchSubjects() async {
+    final data = await _authDataSource.fetchCourses();
+    return data.fold((l) => Left(l), (r) {
       return Right(r);
     });
   }

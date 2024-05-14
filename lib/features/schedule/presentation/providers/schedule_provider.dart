@@ -49,6 +49,21 @@ class ScheduleProvider extends ChangeNotifier {
     await launchUrl(launchUri);
   }
 
+  Future<void> refresh() async {
+    await _homeRepo.fetchUserProfile().then(
+          (value) => value.fold((l) => null, (r) => _profile = r),
+    );
+    await _homeRepo
+        .fetchLectures(
+        course: _profile!.programme!, courses: _profile!.courses!)
+        .then(
+          (value) => value.fold((l) => null, (r) => _timeTable = r),
+    );
+    await sortTimeTable();
+    notifyListeners();
+  }
+
+
   // Fetch user details from the repository
   Future<void> fetchUserDetails() async {
     final data = await _homeRepo.fetchUserProfile();
@@ -57,17 +72,20 @@ class ScheduleProvider extends ChangeNotifier {
           title: l), // Show error if fetching fails
       (r) => _profile = r, // Set user profile if fetching succeeds
     );
+    notifyListeners();
   }
 
   // Fetch timetable from the repository
   Future<void> fetchTimeTable() async {
     final data = await _homeRepo.fetchLectures(
-        course: _profile?.programme ?? "", courses: _profile?.courses ?? []);
+        course: _profile!.programme!, courses: _profile!.courses!);
     data.fold(
-      (l) => _flushBarService.showFlushError(
-          title: l), // Show error if fetching fails
-      (r) => _timeTable = r, // Set timetable if fetching succeeds
+          (l) => _flushBarService.showFlushError(title: l),
+          (r) => _timeTable = r,
     );
+    sortTimeTable();
+    notifyListeners();
+
   }
 
   // Set notifications for lectures
@@ -101,7 +119,11 @@ class ScheduleProvider extends ChangeNotifier {
     final data = await _homeRepo.cancelLecture(course: course);
     data.fold((l) {
       _flushBarService.showFlushError(title: l);
-    }, (r) => _flushBarService.showFlushSuccess(title: r));
+    }, (r) async{
+      await refresh();
+      notifyListeners();
+      _flushBarService.showFlushSuccess(title: r);
+    });
     _appState = AppState.idle;
     notifyListeners();
   }

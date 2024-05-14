@@ -1,5 +1,7 @@
+import 'package:alhikmah_schedule_lecturer/config/services/flushbar_service/flushbarService.dart';
 import 'package:alhikmah_schedule_lecturer/config/shared/button.dart';
 import 'package:alhikmah_schedule_lecturer/features/schedule/presentation/providers/schedule_provider.dart';
+import 'package:alhikmah_schedule_lecturer/locator.dart';
 import 'package:alhikmah_schedule_lecturer/utils/enum/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -70,8 +72,19 @@ class CourseDetailSheet extends StatelessWidget {
                     child: ScheduleButton(
                       label: "Yes",
                       loading: courseProv.appState == AppState.loading,
-                      onPressed: () =>
-                          courseProv.cancelLecture(course: lecture.id),
+                      onPressed: () async {
+                        if (day == DateTime.now().weekday) {
+                          await courseProv
+                              .cancelLecture(course: lecture.id)
+                              .then((value) {
+                            Navigator.pop(context);
+                          });
+                        } else {
+                          locator<FlushBarService>().showFlushError(
+                              title:
+                                  "Lectures can only be canceled on the day of the lecture");
+                        }
+                      },
                     ),
                   ),
                 ],

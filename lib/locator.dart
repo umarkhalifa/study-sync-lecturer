@@ -1,4 +1,5 @@
 import 'package:alhikmah_schedule_lecturer/config/services/flushbar_service/flushbarService.dart';
+import 'package:alhikmah_schedule_lecturer/config/services/push_notification_service/local_push_notifications.dart';
 import 'package:alhikmah_schedule_lecturer/config/services/shared_preference_service/shared_preference_service.dart';
 import 'package:alhikmah_schedule_lecturer/features/authentication/data/datasource/remote/auth_datasource.dart';
 import 'package:alhikmah_schedule_lecturer/features/authentication/data/repository_impl/auth_repository_impl.dart';
@@ -22,4 +23,5 @@ void setupLocator(){
   locator.registerLazySingleton(() => AuthProvider());
   locator.registerLazySingleton(() => FlushBarService());
   locator.registerLazySingleton(() => SharedPreferenceProvider());
+  locator.registerLazySingleton(() => LocalNotificationService());
 }

@@ -8,4 +8,6 @@ abstract class AuthenticationRepository{
   Future<Either<AppFirebaseExceptionType,String>> resetPassword({required String email});
   Future<Either<String,List<Department>>> fetchCourses();
   Future<Either<String, String>> uploadPersonalInformation({required String staffId,required String programme,required List<String> courses});
+  Future<Either<String,List<String>>> fetchSubjects();
+  Future<Either<String,String>> updateProfile({String? programme, String? staffId,List<String>? courses});
 }

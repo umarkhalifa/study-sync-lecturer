@@ -34,7 +34,7 @@ class ScheduleDataSource {
     try {
       // Fetch lectures from Firestore
       final List<Lecture> timeTable = [];
-      final collection = firebaseFirestore.collection("LECTURES");
+      final collection = firebaseFirestore.collection("CLASSES");
       for (var element in courses) {
         final lecture = await collection.doc(element).get();
         timeTable.add(Lecture.fromMap(lecture.data()!));
@@ -46,9 +46,19 @@ class ScheduleDataSource {
     }
   }
 
+  /// Cancel a class by setting the active state and saving the canceled date
+  Future<bool> cancelClass({required String course})async{
+    firebaseFirestore
+        .collection('CLASSES').doc(course).update({
+      'active': false,
+      'canceledDate': DateTime.now().toString()
+    });
+    return true;
+}
   /// Cancel lectures and notify students
   Future<Either<String, String>> cancelLecture({required String course}) async {
     try {
+      await cancelClass(course: course);
       // Cancel lecture and notify students
       final data = firebaseFirestore
           .collection('USERS')

@@ -20,8 +20,8 @@ class FlushBarService{
     ).show(navigatorKey.currentContext!);
   }
 
-  Future<void> showFlushSuccess({required String title})async{
-    await Flushbar(
+  void showFlushSuccess({required String title}){
+     Flushbar(
       backgroundColor: const Color(0XFF12B76A),
       duration: const Duration(seconds: 4),
       dismissDirection: FlushbarDismissDirection.VERTICAL,
