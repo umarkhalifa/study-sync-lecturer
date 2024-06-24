@@ -4,7 +4,6 @@ import 'package:alhikmah_schedule_lecturer/config/services/flushbar_service/flus
 import 'package:alhikmah_schedule_lecturer/config/services/shared_preference_service/shared_preference_service.dart';
 import 'package:alhikmah_schedule_lecturer/features/authentication/data/repository_impl/auth_repository_impl.dart';
 import 'package:alhikmah_schedule_lecturer/features/authentication/domain/model/department.dart';
-import 'package:alhikmah_schedule_lecturer/features/authentication/domain/model/model.dart';
 import 'package:alhikmah_schedule_lecturer/locator.dart';
 import 'package:alhikmah_schedule_lecturer/main.dart';
 import 'package:alhikmah_schedule_lecturer/utils/enum/app_state.dart';
@@ -19,7 +18,7 @@ class AuthProvider extends ChangeNotifier {
 
   List<Department> _programmes = [];
   Department? _programme;
-  final List<Course> _selectedCourses = [];
+  final List<String> _selectedCourses = [];
   int _selectedLevel = 100;
   AppState _appState = AppState.idle;
   AuthState _authState = AuthState.register;
@@ -29,7 +28,11 @@ class AuthProvider extends ChangeNotifier {
 
   Department? get programme => _programme;
 
-  List<Course> get selectedCourses => _selectedCourses;
+  List<String> get selectedCourses => _selectedCourses;
+
+  List<String> _courses = [];
+
+  List<String> get courses => _courses;
 
   int get selectedLevel => _selectedLevel;
 
@@ -58,11 +61,11 @@ class AuthProvider extends ChangeNotifier {
 
       // Handle the result.
       data.fold(
-            (error) {
+        (error) {
           // Show error message to the user.
           flushBarService.showFlushError(title: error.toText());
         },
-            (result) {
+        (result) {
           if (result) {
             // Navigate to home page upon successful login.
             navigatorKey.currentState!.pushNamed('/home');
@@ -104,11 +107,11 @@ class AuthProvider extends ChangeNotifier {
 
       // Handle the result.
       data.fold(
-            (error) {
+        (error) {
           // Show error message to the user.
           flushBarService.showFlushError(title: error.toText());
         },
-            (result) {
+        (result) {
           // Navigate to personal information page upon successful registration.
           navigatorKey.currentState!.pushNamed('/personalInformation');
         },
@@ -124,12 +127,9 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  void updateOnBoardingState(){
+  void updateOnBoardingState() {
     _sharedPreferenceService.setOnBoarding();
-
   }
-
-
 
   /// Fetch courses
   Future<void> fetchCourses() async {
@@ -143,11 +143,11 @@ class AuthProvider extends ChangeNotifier {
 
       // Handle the result.
       data.fold(
-            (error) {
+        (error) {
           // Show error message to the user.
           flushBarService.showFlushError(title: error);
         },
-            (courses) {
+        (courses) {
           // Update courses on success.
           _programmes = courses;
           _programme = courses[0];
@@ -165,8 +165,9 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   // Send reset password Email
-  Future<void> forgotPassword({required String email})async{
+  Future<void> forgotPassword({required String email}) async {
     try {
       // Set the app state to loading.
       _appState = AppState.loading;
@@ -177,11 +178,11 @@ class AuthProvider extends ChangeNotifier {
 
       // Handle the result.
       data.fold(
-            (error) {
+        (error) {
           // Show error message to the user.
           flushBarService.showFlushError(title: error.toText());
         },
-            (result) {
+        (result) {
           flushBarService.showFlushSuccess(title: result);
           // Navigate to personal information page upon successful registration.
           navigatorKey.currentState!.pop();
@@ -196,7 +197,6 @@ class AuthProvider extends ChangeNotifier {
       _appState = AppState.idle;
       notifyListeners();
     }
-
   }
 
   // Update the users selected programme
@@ -211,19 +211,6 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Select and deselect courses
-  void updateSelectedCourse(Course course) {
-    if (selectedCourses.contains(course)) {
-      // If the course is already selected, remove it.
-      selectedCourses.remove(course);
-    } else {
-      // If the course is not selected, add it.
-      selectedCourses.add(course);
-    }
-    // Notify listeners after the list is updated.
-    notifyListeners();
-  }
-
 
   Future<void> uploadPersonalInformation({required String matric}) async {
     try {
@@ -235,16 +222,16 @@ class AuthProvider extends ChangeNotifier {
       final data = await authRepo.uploadPersonalInformation(
         staffId: matric,
         programme: programme?.name ?? '',
-        courses: selectedCourses.map((e) => e.id!).toList(),
+        courses: selectedCourses.toList(),
       );
 
       // Handle the result.
       data.fold(
-            (error) {
+        (error) {
           // Show error message to the user.
           flushBarService.showFlushError(title: error);
         },
-            (result) {
+        (result) {
           // Navigate to the home screen upon successful upload.
           Navigator.pushReplacementNamed(navigatorKey.currentContext!, '/home');
         },
@@ -258,6 +245,17 @@ class AuthProvider extends ChangeNotifier {
       _appState = AppState.idle;
       notifyListeners();
     }
+  }
+
+
+
+  void updateCourse(String course) {
+    if (_selectedCourses.contains(course)) {
+      _selectedCourses.remove(course);
+    } else {
+      _selectedCourses.add(course);
+    }
+    notifyListeners();
   }
 }
 

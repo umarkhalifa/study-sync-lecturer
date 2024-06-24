@@ -5,8 +5,10 @@ class ScheduleTextField extends StatelessWidget {
   final bool? obscureText;
   final TextEditingController? controller;
   final TextInputType? textInputType;
+  final String?Function(String?)? validator;
+
   const ScheduleTextField({
-    super.key, this.prefixIcon, this.hint, this.obscureText, this.controller, this.textInputType,
+    super.key, this.prefixIcon, this.hint, this.obscureText, this.controller, this.textInputType, this.validator,
   });
 
   @override
@@ -16,6 +18,8 @@ class ScheduleTextField extends StatelessWidget {
       keyboardType: textInputType,
       controller: controller,
       obscuringCharacter: "*",
+      validator: validator,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey.shade400),

@@ -3,6 +3,7 @@ import 'package:alhikmah_schedule_lecturer/config/shared/text_field.dart';
 import 'package:alhikmah_schedule_lecturer/features/authentication/presentation/providers/auth_provider.dart';
 import 'package:alhikmah_schedule_lecturer/features/authentication/presentation/screens/register_screen.dart';
 import 'package:alhikmah_schedule_lecturer/utils/enum/app_state.dart';
+import 'package:alhikmah_schedule_lecturer/utils/validator/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:solar_icons/solar_icons.dart';
@@ -68,6 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: Colors.grey.shade400,
                     ),
                     hint: "Enter your email address",
+                    validator: AppValidator().validateEmail,
                     controller: emailController,
                   ),
                   const SizedBox(
@@ -80,6 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: Colors.grey.shade400,
                     ),
                     hint: "Enter your password",
+                    validator: AppValidator().validatePassword,
                     obscureText: true,
                   ),
                   const SizedBox(

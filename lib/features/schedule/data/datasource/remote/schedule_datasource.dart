@@ -34,10 +34,14 @@ class ScheduleDataSource {
     try {
       // Fetch lectures from Firestore
       final List<Lecture> timeTable = [];
-      final collection = firebaseFirestore.collection("CLASSES");
+      final collection = firebaseFirestore.collection("RAIN");
       for (var element in courses) {
         final lecture = await collection.doc(element).get();
-        timeTable.add(Lecture.fromMap(lecture.data()!));
+        if (lecture.data() != null) {
+          timeTable.add(
+            Lecture.fromMap(lecture.data()!),
+          );
+        }
       }
       return Right(timeTable);
     } catch (error) {
@@ -49,7 +53,7 @@ class ScheduleDataSource {
   /// Cancel a class by setting the active state and saving the canceled date
   Future<bool> cancelClass({required String course})async{
     firebaseFirestore
-        .collection('CLASSES').doc(course).update({
+        .collection('RAIN').doc(course).update({
       'active': false,
       'canceledDate': DateTime.now().toString()
     });

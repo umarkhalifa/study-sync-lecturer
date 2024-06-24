@@ -21,7 +21,10 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
     // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await Provider.of<AuthProvider>(context, listen: false).fetchCourses();
+      await Future.wait([
+       Provider.of<AuthProvider>(context, listen: false).fetchCourses(),
+       // Provider.of<AuthProvider>(context, listen: false).getCourses()
+      ]);
     });
   }
 
@@ -139,11 +142,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(course.code ?? ''),
-                              Text(
-                                course.title ?? '',
-                                maxLines: 1,
-                              ),
+                              Text(course),
                               const Divider()
                             ],
                           ),
